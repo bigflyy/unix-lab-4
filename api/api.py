@@ -22,7 +22,7 @@ async def lifespan(app: FastAPI):
     # Подключаемся к Rabbitmq
     connection = pika.BlockingConnection(connection_params)
     channel = connection.channel()
-    channel.queue_declare(queue="embeddings_queue")
+    channel.queue_declare(queue="embedding_queue")
     
     app_state["rabbitmq"]["connection"] = connection
     app_state["rabbitmq"]["channel"] = channel
@@ -40,7 +40,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-@app.get("/embed")
+@app.post("/embed")
 async def embed_request(batch : EmbedBatch):
     channel = app_state["rabbitmq"]["channel"]
     channel.basic_publish(
