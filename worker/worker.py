@@ -40,17 +40,17 @@ def process_message(channel, method, properties, body):
     # Получаем эмбеддинги
     points = []
     embeddings = model.encode(chunks, batch_size=16)
-    # for i, embedding in enumerate(embeddings): 
-    #     points.append(
-    #         PointStruct(
-    #             id=str(uuid.uuid4()),
-    #             vector=embedding,
-    #             payload={"job_id":job_id, "batch_index": batch_index, "chunk_index": i, "text": chunks[i]}
-    #         )
-    #     )
+    for i, embedding in enumerate(embeddings): 
+        points.append(
+            PointStruct(
+                id=str(uuid.uuid4()),
+                vector=embedding,
+                payload={"job_id":job_id, "batch_index": batch_index, "chunk_index": i, "text": chunks[i]}
+            )
+        )
 
     # # СОХРАНЯЕМ В QDRANT
-    # qdrant.upsert(collection_name=COLLECTION_NAME, points=points)
+    qdrant.upsert(collection_name=COLLECTION_NAME, points=points)
 
     # Уведомляем брокер что сообщение обработано, чтобы сообщение было удалено из очереди 
     # тэг этого сообщения пеердаем
