@@ -22,7 +22,7 @@ for job_idx in range(1000):
     batch = {
         "job_id": f"doc{job_idx}",
         "batch_index": 0,
-        "chunks": [f"text chunk {i}"*100 for i in range(256)]
+        "chunks": [f"text chunk {i}"*50 for i in range(256)]
     }
     r = requests.post(URL, json=batch)
     print(r.json())
